@@ -6,6 +6,23 @@
 #include "GameFramework/Actor.h"
 #include "HexTileGrid.generated.h"
 
+USTRUCT(Atomic, BlueprintType)
+struct FTileStruct
+{
+	GENERATED_BODY()
+
+public:
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	FVector Location;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	TArray<int> InUseCameraIndex;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	float CameraArmLength;
+};
+
 UCLASS()
 class HEXTILESYSTEM_API AHexTileGrid : public AActor
 {
@@ -13,7 +30,6 @@ class HEXTILESYSTEM_API AHexTileGrid : public AActor
 	
 public:	
 	AHexTileGrid();
-
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	class USphereComponent* Sphere;
@@ -43,8 +59,14 @@ public:
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	float TileScale = 1.f;
 
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Meta = (Tooltip = "Centimeter"))
+	float Offset = 0.f;
+
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere)
-	TArray<FVector> TileMatrix;
+	TArray<FTileStruct> TileStructs;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Data")
+	TArray<int> DefaultInUseCameraIndex = {0, 1};
 	
 	void SetTileMatrix();
 

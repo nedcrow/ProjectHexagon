@@ -48,22 +48,27 @@ void AHexTileGrid::SetTileMatrix()
 	float unitY = oneSide;
 
 	/* Clear */
-	for (FVector location : TileMatrix) ISM->RemoveInstance(0);
-	TileMatrix.Empty();
+	for (auto tile : TileStructs) ISM->RemoveInstance(0);
+	TileStructs.Empty();
 
 	/* Create */
 	for (int y = 0; y < SizeY; y++) {
 		for (int x = 0; x < SizeX; x++) {
-			float additionalY = (x % 2 != 0) ? unitY * 0.5f : 0;
-			TileMatrix.Add(FVector((x * unitX) * Unit, (y * unitY + additionalY) * Unit, 0.f));
+			float additionalY = (x % 2 != 0) ? unitY * 0.5f : 0.f;
+			float offsetX = Offset * x;
+			float offsetY = Offset * y;
 
+			FTileStruct tile;
+			tile.Location = FVector((x * unitX) * Unit + offsetX, (y * unitY + additionalY) * Unit + offsetY, 0.f);
+			tile.InUseCameraIndex = DefaultInUseCameraIndex;
+			TileStructs.Add(tile);
 		}
 	}
 
-	for (FVector location : TileMatrix) {
+	for (FTileStruct tile : TileStructs) {
 		ISM->AddInstance(FTransform(
 			FRotator::ZeroRotator,
-			location,
+			tile.Location,
 			FVector::OneVector
 		));
 	}	
